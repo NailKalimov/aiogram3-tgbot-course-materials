@@ -12,7 +12,7 @@ user_group_router.message.filter(ChatTypeFilter(["group", "supergroup"]))
 user_group_router.edited_message.filter(ChatTypeFilter(["group", "supergroup"]))
 
 
-@user_group_router.message(Command("admin"))
+@user_group_router.message(Command("update-admins"))
 async def get_admins(message: types.Message, bot: Bot):
     chat_id = message.chat.id
     admins_list = await bot.get_chat_administrators(chat_id)
@@ -30,16 +30,17 @@ async def get_admins(message: types.Message, bot: Bot):
     #print(admins_list)
 
 
+#удаление знаков препинания
 def clean_text(text: str):
     return text.translate(str.maketrans("", "", punctuation))
 
 
 @user_group_router.edited_message()
-@user_group_router.message()
+@user_group_router.message(F.text)
 async def cleaner(message: types.Message):
     if restricted_words.intersection(clean_text(message.text.lower()).split()):
         await message.answer(
-            f"{message.from_user.first_name}, соблюддайте порядок в чате!"
+            f"{message.from_user.first_name}, соблюдайте порядок в чате!"
         )
         await message.delete()
         # await message.chat.ban(message.from_user.id)

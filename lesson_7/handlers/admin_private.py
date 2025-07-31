@@ -129,7 +129,7 @@ async def back_step_handler(message: types.Message, state: FSMContext) -> None:
 
     if current_state == AddProduct.name:
         await message.answer(
-            'Предидущего шага нет, или введите название товара или напишите "отмена"'
+            'Предыдущего шага нет, или введите название товара или напишите "отмена"'
         )
         return
 
@@ -144,7 +144,7 @@ async def back_step_handler(message: types.Message, state: FSMContext) -> None:
         previous = step
 
 
-# Ловим данные для состояние name и потом меняем состояние на description
+# Ловим данные для состояния name и потом меняем состояние на description
 @admin_router.message(AddProduct.name, or_f(F.text, F.text == "."))
 async def add_name(message: types.Message, state: FSMContext):
     if message.text == ".":
@@ -204,13 +204,13 @@ async def add_price(message: types.Message, state: FSMContext):
     await state.set_state(AddProduct.image)
 
 
-# Хендлер для отлова некорректных ввода для состояния price
+# Хендлер для отлова некорректных вводов для состояния price
 @admin_router.message(AddProduct.price)
 async def add_price2(message: types.Message, state: FSMContext):
     await message.answer("Вы ввели не допустимые данные, введите стоимость товара")
 
 
-# Ловим данные для состояние image и потом выходим из состояний
+# Ловим данные для состояния image и потом выходим из состояний
 @admin_router.message(AddProduct.image, or_f(F.photo, F.text == "."))
 async def add_image(message: types.Message, state: FSMContext, session: AsyncSession):
     if message.text and message.text == ".":
@@ -239,4 +239,4 @@ async def add_image(message: types.Message, state: FSMContext, session: AsyncSes
 
 @admin_router.message(AddProduct.image)
 async def add_image2(message: types.Message, state: FSMContext):
-    await message.answer("Отправьте фото пищи")
+    await message.answer("Отправьте фото товара")
